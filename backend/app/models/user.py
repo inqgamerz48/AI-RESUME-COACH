@@ -34,3 +34,4 @@ class User(Base):
     usage_limits = relationship("UsageLimit", back_populates="user", uselist=False, cascade="all, delete-orphan")
     resumes = relationship("Resume", back_populates="user", cascade="all, delete-orphan")
     chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
+    resume_analyses = relationship("ResumeAnalysis", back_populates="user", cascade="all, delete-orphan")

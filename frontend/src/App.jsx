@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Pricing from './pages/Pricing';
+import ResumeAnalyzerPage from './pages/ResumeAnalyzerPage';
 import './index.css';
 
 // Protected Route wrapper
@@ -35,6 +36,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/resume-analyzer"
+                        element={
+                            <ProtectedRoute>
+                                <ResumeAnalyzerPage />
                             </ProtectedRoute>
                         }
                     />

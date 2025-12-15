@@ -121,3 +121,24 @@ class UpgradeRequest(BaseModel):
 class WebhookEvent(BaseModel):
     event_type: str
     data: Dict[str, Any]
+
+
+# Resume Analyzer Schemas
+class ResumeAnalysisResponse(BaseModel):
+    id: int
+    filename: str
+    overall_score: float
+    ats_score: float
+    content_score: float
+    structure_score: float
+    suggestions: List[Dict[str, Any]]
+    status: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class EnhanceResumeRequest(BaseModel):
+    accepted_suggestions: List[int] = Field(..., description="List of suggestion indices to accept")
+

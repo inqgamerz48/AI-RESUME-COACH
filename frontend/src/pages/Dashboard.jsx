@@ -68,6 +68,29 @@ export default function Dashboard() {
                             </span>
                         </div>
                     )}
+
+                    {/* Resume Analyzer CTA */}
+                    <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+                        <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-2 flex items-center">
+                                    <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    New: AI Resume Analyzer
+                                </h3>
+                                <p className="text-indigo-100 text-sm">
+                                    Upload your resume, get AI-powered analysis, and download an enhanced version
+                                </p>
+                            </div>
+                            <a
+                                href="/resume-analyzer"
+                                className="ml-4 bg-white text-indigo-600 font-bold py-3 px-6 rounded-lg hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg whitespace-nowrap"
+                            >
+                                Try Now →
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-8">
