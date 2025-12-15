@@ -34,9 +34,9 @@ A comprehensive quality audit was conducted on the **Resume Analyzer** feature a
 ### 3. Testing & Coverage
 | Check | Status | Metrics |
 |-------|--------|---------|
-| **Unit Tests** | ✅ Passed | 32/32 tests passed (100%). Covered all service logic (PDF Parsing, AI Analysis, Scoring). |
-| **Integration Tests** | ✅ Passed | 9/9 tests passed (100%). Covered authentication, file uploads, tier limits, and error scenarios. |
-| **Overall Pass Rate** | ✅ **100%** | **41/41 Tests Passed**. |
+| **Unit Tests** (Services) | ✅ Passed | 40/40 tests passed (100%). Covered all service logic (PDF Parsing, AI Analysis, Scoring, Tier Logic). |
+| **Integration Tests** (API) | ✅ Passed | 9/9 tests passed (100%). Covered authentication, file uploads, tier limits, and error scenarios. |
+| **Overall Pass Rate** | ✅ **100%** | **49/49 Tests Passed**. Coverage: **72.40%**. |
 
 ---
 

@@ -12,9 +12,9 @@ class ResumeTemplate(Base):
     description = Column(Text)
     
     # Template categorization
-    industry = Column(String(50))  # Tech, Finance, Healthcare, etc.
-    position_type = Column(String(50))  # Entry-level, Mid-level, Senior, Executive
-    category = Column(String(50))  # Modern, Classic, Creative, Minimal, etc.
+    industry = Column(String(50), index=True)  # Tech, Finance, Healthcare, etc.
+    position_type = Column(String(50), index=True)  # Entry-level, Mid-level, Senior, Executive
+    category = Column(String(50), index=True)  # Modern, Classic, Creative, Minimal, etc.
     
     # Template settings (JSON)
     # Example: {"font": "Helvetica", "color_scheme": "blue", "layout": "two-column"}
@@ -24,11 +24,11 @@ class ResumeTemplate(Base):
     preview_image = Column(String(255))
     
     # Template tier requirement
-    tier_required = Column(String(20), default="FREE")  # FREE, PRO, ULTIMATE
+    tier_required = Column(String(20), default="FREE", index=True)  # FREE, PRO, ULTIMATE
     
     # Status
-    is_active = Column(Boolean, default=True)
-    is_featured = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True, index=True)
+    is_featured = Column(Boolean, default=False, index=True)
     
     # Popularity (for sorting)
     usage_count = Column(Integer, default=0)

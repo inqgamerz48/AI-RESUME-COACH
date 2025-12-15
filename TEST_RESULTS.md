@@ -10,12 +10,12 @@
 
 | Category | Total | Passed | Failed | Pass Rate |
 |----------|-------|--------|--------|-----------|
-| **Unit Tests** (Services) | 32 | 32 | 0 | **100%** ✅ |
+| **Unit Tests** (Services) | 40 | 40 | 0 | **100%** ✅ |
 | **Integration Tests** (API) | 9 | 9 | 0 | **100%** ✅ |
-| **TOTAL** | 41 | 41 | 0 | **100%** ✅ |
+| **TOTAL** | 49 | 49 | 0 | **100%** ✅ |
 
-**Test Duration**: ~9.28 seconds  
-**Coverage**: 67.97% (Core Analyzer Service: **86%**)
+**Test Duration**: ~5.55 seconds  
+**Coverage**: 72.40% (Core Analyzer Service: **86%**)
 
 ---
 
@@ -40,6 +40,10 @@
   - Fixed file stream exhaustion in rate-limiting tests by creating fresh streams for each request.
   - Properly mocked authentication dependencies using `app.dependency_overrides`.
 
+### 5. 📈 Tier Service Coverage
+- **Issue**: `tier_service.py` had low test coverage (30%).
+- **Fix**: Added comprehensive unit tests (`tests/test_tier_service_coverage.py`), raising coverage to **86%**.
+
 ---
 
 ## 🔍 Detailed Coverage
@@ -49,7 +53,7 @@
 | `resume_analyzer_service.py` | **86%** | ✅ Excellent |
 | `pdf_parser_service.py` | **94%** | ✅ Superior |
 | `resume_analyzer.py` (API) | **79%** | ✅ Good |
-| `tier_service.py` | 30% | ⚠️ Low (External dependency) |
+| `tier_service.py` | **86%** | ✅ Excellent |
 
 ---
 

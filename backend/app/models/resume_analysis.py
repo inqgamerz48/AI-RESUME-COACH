@@ -11,7 +11,7 @@ class ResumeAnalysis(Base):
     __tablename__ = "resume_analyses"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     
     # Original PDF Info
     original_filename = Column(String, nullable=False)
@@ -52,7 +52,7 @@ class ResumeAnalysis(Base):
     is_active = Column(Integer, default=1)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships

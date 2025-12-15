@@ -130,3 +130,4 @@ celerybeat.pid
 
 # Uploads
 uploads/
+frontend/node_modules

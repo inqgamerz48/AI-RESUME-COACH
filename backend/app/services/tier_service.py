@@ -49,7 +49,7 @@ class TierService:
     def reset_ai_usage_if_needed(usage: UsageLimit, db: Session) -> None:
         """Reset AI usage counter if it's a new day."""
         today = date.today()
-        if usage.ai_calls_reset_date < today:
+        if usage.ai_calls_reset_date is None or usage.ai_calls_reset_date < today:
             usage.ai_calls_used = 0
             usage.ai_calls_reset_date = today
             db.commit()
