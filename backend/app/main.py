@@ -11,8 +11,8 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.db.base_class import Base
 from app.db.session import engine
-from app.api.v1.endpoints import auth, chat, resume, billing
-from app.models import user, usage_limit, resume as resume_model, chat_session
+from app.api.v1.endpoints import auth, chat, resume, billing, templates
+from app.models import user, usage_limit, resume as resume_model, chat_session, template
 
 
 # Rate limiter
@@ -78,6 +78,7 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/v1", tags=["AI Chat"])
 app.include_router(resume.router, prefix="/api/v1", tags=["Resume"])
 app.include_router(billing.router, prefix="/api/v1", tags=["Billing"])
+app.include_router(templates.router, prefix="/api/v1", tags=["Templates"])
 
 
 # Global exception handler

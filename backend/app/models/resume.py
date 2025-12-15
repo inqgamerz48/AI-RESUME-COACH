@@ -15,7 +15,7 @@ class Resume(Base):
     
     # Resume Data
     title = Column(String, default="My Resume")
-    template_id = Column(String, default="basic")  # basic, modern, professional, etc.
+    template_id = Column(Integer, ForeignKey("resume_templates.id"), default=1)  # References template table
     
     # Resume Content (stored as JSON)
     content = Column(JSON, nullable=False)  # Full resume structure
