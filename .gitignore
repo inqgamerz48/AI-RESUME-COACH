@@ -127,3 +127,6 @@ celerybeat.pid
 !assets/
 !assets/**
 
+
+# Uploads
+uploads/
