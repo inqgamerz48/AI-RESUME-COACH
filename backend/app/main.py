@@ -26,12 +26,13 @@ async def lifespan(app: FastAPI):
     """
     # Startup: Create database tables
     Base.metadata.create_all(bind=engine)
-    print("✅ Database tables created")
+    import logging
+    logging.info("✅ Database tables created")
     
     yield
     
     # Shutdown
-    print("🛑 Shutting down...")
+    logging.info("🛑 Shutting down...")
 
 
 # Create FastAPI app
@@ -74,12 +75,13 @@ def health_check():
 
 
 # Include routers
+# Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/v1", tags=["AI Chat"])
+app.include_router(resume_analyzer.router, prefix="/api/v1", tags=["Resume Analyzer"])  # Must be before resume router
 app.include_router(resume.router, prefix="/api/v1", tags=["Resume"])
 app.include_router(billing.router, prefix="/api/v1", tags=["Billing"])
 app.include_router(templates.router, prefix="/api/v1", tags=["Templates"])
-app.include_router(resume_analyzer.router, prefix="/api/v1", tags=["Resume Analyzer"])
 
 
 # Global exception handler

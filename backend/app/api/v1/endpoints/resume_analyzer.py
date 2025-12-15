@@ -346,7 +346,8 @@ def delete_analysis(
     if analysis.original_file_path and os.path.exists(analysis.original_file_path):
         try:
             os.remove(analysis.original_file_path)
-        except:
-            pass  # Don't fail if file cleanup fails
+        except Exception as e:
+            import logging
+            logging.warning(f"Failed to delete analysis file {analysis.original_file_path}: {str(e)}")
     
     return None
