@@ -34,6 +34,9 @@ export default function Navbar() {
                                 <Link to="/dashboard" className="text-gray-700 hover:text-primary-600 font-medium transition">
                                     Dashboard
                                 </Link>
+                                <Link to="/resume-analyzer" className="text-gray-700 hover:text-primary-600 font-medium transition">
+                                    Analyzer
+                                </Link>
                                 <Link to="/pricing" className="text-gray-700 hover:text-primary-600 font-medium transition">
                                     Pricing
                                 </Link>

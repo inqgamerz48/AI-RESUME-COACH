@@ -32,9 +32,16 @@ export default function Home() {
 
                     <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                         {isAuthenticated ? (
-                            <Link to="/dashboard">
-                                <Button>Go to Dashboard</Button>
-                            </Link>
+                            <>
+                                <Link to="/dashboard">
+                                    <Button>Go to Dashboard</Button>
+                                </Link>
+                                <Link to="/resume-analyzer">
+                                    <Button variant="secondary" className="border-2 border-primary-600 text-primary-600 hover:bg-primary-50">
+                                        Check Resume Score
+                                    </Button>
+                                </Link>
+                            </>
                         ) : (
                             <>
                                 <Link to="/register">
