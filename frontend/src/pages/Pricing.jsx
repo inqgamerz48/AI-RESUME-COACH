@@ -1,8 +1,9 @@
 /**
  * Pricing Page - Shows all 3 tiers
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import anime from 'animejs/lib/anime.es.js';
 import { billingService } from '../services/api';
 import { useAuthStore, useUIStore } from '../store/store';
 import Button from '../components/Button';
@@ -13,6 +14,7 @@ export default function Pricing() {
     const { user, isAuthenticated } = useAuthStore();
     const setShowUpgradeModal = useUIStore((state) => state.setShowUpgradeModal);
     const navigate = useNavigate();
+    const containerRef = useRef(null);
 
     useEffect(() => {
         loadPlans();
@@ -22,6 +24,19 @@ export default function Pricing() {
         try {
             const data = await billingService.getPlans();
             setPlans(data.plans);
+            // Run animation after plans are loaded
+            setTimeout(() => {
+                if (containerRef.current) {
+                    anime({
+                        targets: containerRef.current.querySelectorAll('.pricing-anim'),
+                        translateY: [20, 0],
+                        opacity: [0, 1],
+                        delay: anime.stagger(150),
+                        easing: 'easeOutExpo',
+                        duration: 800
+                    });
+                }
+            }, 100);
         } catch (error) {
             console.error('Failed to load plans:', error);
         } finally {
@@ -60,10 +75,10 @@ export default function Pricing() {
     }
 
     return (
-        <div className="min-h-screen py-12 px-4">
+        <div className="min-h-screen py-12 px-4" ref={containerRef}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-12">
+                <div className="text-center mb-12 pricing-anim opacity-0">
                     <h1 className="text-5xl font-bold gradient-text mb-4">
                         Choose Your Plan
                     </h1>
@@ -78,7 +93,7 @@ export default function Pricing() {
                         <div
                             key={plan.tier}
                             className={`${plan.popular ? 'pricing-card-popular' : 'pricing-card'
-                                } relative`}
+                                } relative pricing-anim opacity-0`}
                         >
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -167,7 +182,7 @@ export default function Pricing() {
                 </div>
 
                 {/* Payment Integration Notice */}
-                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg pricing-anim opacity-0">
                     <div className="flex">
                         <svg
                             className="w-6 h-6 text-yellow-400 mr-3 flex-shrink-0"

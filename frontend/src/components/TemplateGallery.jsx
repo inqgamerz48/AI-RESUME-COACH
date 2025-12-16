@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
+import anime from 'animejs/lib/anime.es.js';
 
 const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
     const [templates, setTemplates] = useState([]);
@@ -12,6 +13,35 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
     const [industries, setIndustries] = useState([]);
     const [categories, setCategories] = useState([]);
     const [positionTypes, setPositionTypes] = useState([]);
+
+    const galleryRef = useRef(null);
+
+    // Initial animation for filters
+    useEffect(() => {
+        if (galleryRef.current) {
+            anime({
+                targets: galleryRef.current.querySelector('.gallery-filters'),
+                translateY: [-10, 0],
+                opacity: [0, 1],
+                easing: 'easeOutQuad',
+                duration: 600
+            });
+        }
+    }, []);
+
+    // Animate templates when they change
+    useEffect(() => {
+        if (!loading && templates.length > 0 && galleryRef.current) {
+            anime({
+                targets: galleryRef.current.querySelectorAll('.template-card'),
+                translateY: [20, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                easing: 'easeOutExpo',
+                duration: 800
+            });
+        }
+    }, [templates, loading]);
 
     useEffect(() => {
         fetchFilterOptions();
@@ -88,9 +118,9 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
     }
 
     return (
-        <div className="template-gallery">
+        <div className="template-gallery" ref={galleryRef}>
             {/* Filters */}
-            <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 gallery-filters opacity-0">
                 <div>
                     <label className="block text-sm font-medium mb-2">Industry</label>
                     <select
@@ -139,9 +169,9 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
                 {templates.map((template) => (
                     <div
                         key={template.id}
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-lg ${currentTemplateId === template.id
-                                ? 'border-purple-600 bg-purple-50'
-                                : 'border-gray-200 hover:border-purple-400'
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-lg template-card opacity-0 ${currentTemplateId === template.id
+                            ? 'border-purple-600 bg-purple-50'
+                            : 'border-gray-200 hover:border-purple-400'
                             }`}
                         onClick={() => handleTemplateSelect(template)}
                     >
@@ -154,10 +184,10 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
 
                         {/* Tier Badge */}
                         <div className={`inline-block ml-2 text-xs px-2 py-1 rounded-full ${template.tier_required === 'FREE'
-                                ? 'bg-green-100 text-green-800'
-                                : template.tier_required === 'PRO'
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : 'bg-purple-100 text-purple-800'
+                            ? 'bg-green-100 text-green-800'
+                            : template.tier_required === 'PRO'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-purple-100 text-purple-800'
                             }`}>
                             {template.tier_required}
                         </div>

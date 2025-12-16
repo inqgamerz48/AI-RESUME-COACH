@@ -1,12 +1,29 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
     CheckCircle, XCircle, AlertCircle, TrendingUp, Shield, Layout,
     Briefcase, ChevronDown, ChevronUp, Sparkles
 } from 'lucide-react';
+import anime from 'animejs/lib/anime.es.js';
 
 const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
     const [selectedSuggestions, setSelectedSuggestions] = useState([]);
     const [expandedCategory, setExpandedCategory] = useState(null);
+
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        // Stagger animation for analysis result blocks
+        if (containerRef.current) {
+            anime({
+                targets: containerRef.current.querySelectorAll('.analysis-anim'),
+                translateY: [20, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                easing: 'easeOutExpo',
+                duration: 800
+            });
+        }
+    }, []);
 
     const {
         overall_score,
@@ -80,9 +97,9 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
     };
 
     return (
-        <div className="w-full max-w-6xl mx-auto space-y-6">
+        <div className="w-full max-w-6xl mx-auto space-y-6" ref={containerRef}>
             {/* Overall Score Card */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-white">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-white analysis-anim opacity-0">
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-3xl font-bold mb-2">Resume Analysis Complete!</h2>
@@ -110,7 +127,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
             </div>
 
             {/* Category Scores */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 analysis-anim opacity-0">
                 {Object.entries(category_scores).map(([category, score]) => {
                     const Icon = categoryIcons[category];
                     return (
@@ -138,7 +155,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
 
             {/* Key Metrics */}
             {metrics && (
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim opacity-0">
                     <h3 className="text-xl font-bold text-gray-900 mb-4">Key Metrics</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
@@ -162,7 +179,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
             )}
 
             {/* Suggestions */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim opacity-0">
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h3 className="text-2xl font-bold text-gray-900">
@@ -216,8 +233,8 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
                                             <div
                                                 key={suggestion.index}
                                                 className={`border rounded-lg p-4 transition-all ${selectedSuggestions.includes(suggestion.index)
-                                                        ? 'border-indigo-500 bg-indigo-50'
-                                                        : 'border-gray-200 bg-white'
+                                                    ? 'border-indigo-500 bg-indigo-50'
+                                                    : 'border-gray-200 bg-white'
                                                     }`}
                                             >
                                                 <div className="flex items-start space-x-3">
@@ -296,8 +313,8 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
                         onClick={() => onProceedToEnhance(selectedSuggestions)}
                         disabled={selectedSuggestions.length === 0}
                         className={`px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200 ${selectedSuggestions.length === 0
-                                ? 'bg-gray-300 cursor-not-allowed'
-                                : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5'
+                            ? 'bg-gray-300 cursor-not-allowed'
+                            : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5'
                             }`}
                     >
                         Apply Selected Enhancements

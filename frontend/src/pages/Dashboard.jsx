@@ -1,8 +1,9 @@
 /**
  * Dashboard - Resume Builder with AI Chat
  */
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import anime from 'animejs/lib/anime.es.js';
 import { useAuthStore, useUIStore } from '../store/store';
 import { aiService } from '../services/api';
 import Button from '../components/Button';
@@ -17,6 +18,31 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [usage, setUsage] = useState(null);
     const [error, setError] = useState('');
+
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        // Dashboard entry animations
+        const timeline = anime.timeline({
+            easing: 'easeOutExpo',
+            duration: 800
+        });
+
+        timeline
+            .add({
+                targets: containerRef.current.querySelector('.dashboard-header'),
+                translateY: [-20, 0],
+                opacity: [0, 1],
+                duration: 600
+            })
+            .add({
+                targets: containerRef.current.querySelectorAll('.dashboard-card'),
+                translateY: [30, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 800
+            }, '-=400');
+    }, []);
 
     const handleRewrite = async () => {
         if (!inputText.trim()) {
@@ -47,10 +73,10 @@ export default function Dashboard() {
     const canUseUltimateFeatures = user?.plan === 'ULTIMATE';
 
     return (
-        <div className="min-h-screen py-12 px-4">
+        <div className="min-h-screen py-12 px-4" ref={containerRef}>
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-8 dashboard-header opacity-0">
                     <h1 className="text-4xl font-bold gradient-text mb-2">
                         Resume Builder Dashboard
                     </h1>
@@ -71,7 +97,7 @@ export default function Dashboard() {
                     )}
 
                     {/* Resume Analyzer CTA */}
-                    <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+                    <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white transform transition-all duration-300 hover:scale-[1.02]">
                         <div className="flex items-center justify-between">
                             <div className="flex-1">
                                 <h3 className="text-xl font-bold mb-2 flex items-center">
@@ -98,7 +124,7 @@ export default function Dashboard() {
                     {/* Left: AI Chat */}
                     <div className="space-y-6">
                         {/* Basic Rewrite - ALL TIERS */}
-                        <div className="card">
+                        <div className="card dashboard-card opacity-0">
                             <h2 className="text-2xl font-bold mb-4">
                                 ✨ AI Resume Improver
                             </h2>
@@ -147,7 +173,7 @@ export default function Dashboard() {
 
                         {/* Project Generation - PRO & ULTIMATE */}
                         {canUseProFeatures ? (
-                            <div className="card">
+                            <div className="card dashboard-card opacity-0">
                                 <h2 className="text-2xl font-bold mb-4">
                                     🚀 Project Description Generator
                                 </h2>
@@ -158,7 +184,7 @@ export default function Dashboard() {
                             </div>
                         ) : (
                             <FeatureLock feature="project_gen" plan="PRO">
-                                <div className="card">
+                                <div className="card dashboard-card opacity-0">
                                     <h2 className="text-2xl font-bold mb-4">
                                         🚀 Project Description Generator
                                     </h2>
@@ -171,7 +197,7 @@ export default function Dashboard() {
 
                         {/* Summary Generation - PRO & ULTIMATE */}
                         {canUseProFeatures ? (
-                            <div className="card">
+                            <div className="card dashboard-card opacity-0">
                                 <h2 className="text-2xl font-bold mb-4">
                                     📝 Resume Summary Generator
                                 </h2>
@@ -182,7 +208,7 @@ export default function Dashboard() {
                             </div>
                         ) : (
                             <FeatureLock feature="summary" plan="PRO">
-                                <div className="card">
+                                <div className="card dashboard-card opacity-0">
                                     <h2 className="text-2xl font-bold mb-4">
                                         📝 Resume Summary Generator
                                     </h2>
@@ -196,7 +222,7 @@ export default function Dashboard() {
 
                     {/* Right: Resume Preview */}
                     <div className="space-y-6">
-                        <div className="card sticky top-24">
+                        <div className="card sticky top-24 dashboard-card opacity-0">
                             <h2 className="text-2xl font-bold mb-4">📄 Resume Preview</h2>
 
                             <div className="bg-gray-50 rounded-lg p-6 min-h-[600px] border-2 border-dashed border-gray-300">

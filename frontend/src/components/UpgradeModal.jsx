@@ -1,12 +1,27 @@
 /**
  * Upgrade Modal Component
  */
+import { useEffect, useRef } from 'react';
 import { useUIStore } from '../store/store';
 import { useNavigate } from 'react-router-dom';
+import anime from 'animejs/lib/anime.es.js';
 
 export default function UpgradeModal() {
     const { showUpgradeModal, upgradeMessage, setShowUpgradeModal } = useUIStore();
     const navigate = useNavigate();
+    const modalRef = useRef(null);
+
+    useEffect(() => {
+        if (showUpgradeModal && modalRef.current) {
+            anime({
+                targets: modalRef.current,
+                scale: [0.9, 1],
+                opacity: [0, 1],
+                easing: 'easeOutElastic(1, .6)',
+                duration: 600
+            });
+        }
+    }, [showUpgradeModal]);
 
     if (!showUpgradeModal) return null;
 
@@ -17,7 +32,10 @@ export default function UpgradeModal() {
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-scale-in">
+            <div
+                ref={modalRef}
+                className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl opacity-0"
+            >
                 <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-accent-100 to-primary-100 rounded-full mx-auto mb-4">
                     <svg className="w-8 h-8 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

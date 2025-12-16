@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileSearch } from 'lucide-react';
+import anime from 'animejs/lib/anime.es.js';
 import ResumeUploader from '../components/ResumeUploader';
 import AnalysisResults from '../components/AnalysisResults';
 import EnhancementSummary from '../components/EnhancementSummary';
@@ -11,6 +12,50 @@ const ResumeAnalyzerPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [analysisData, setAnalysisData] = useState(null);
     const [enhancementData, setEnhancementData] = useState(null);
+
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        // Initial entry animation
+        const timeline = anime.timeline({
+            easing: 'easeOutExpo',
+            duration: 800
+        });
+
+        timeline
+            .add({
+                targets: containerRef.current.querySelector('.analyzer-header'),
+                translateY: [-20, 0],
+                opacity: [0, 1],
+                duration: 600
+            })
+            .add({
+                targets: containerRef.current.querySelector('.analyzer-steps'),
+                translateY: [20, 0],
+                opacity: [0, 1],
+                duration: 600
+            }, '-=300')
+            .add({
+                targets: containerRef.current.querySelectorAll('.analyzer-anim-item'),
+                translateY: [20, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 600
+            }, '-=300');
+    }, []);
+
+    // Animate content change
+    useEffect(() => {
+        if (containerRef.current) {
+            anime({
+                targets: containerRef.current.querySelector('.analyzer-content'),
+                opacity: [0, 1],
+                translateY: [10, 0],
+                easing: 'easeOutQuad',
+                duration: 400
+            });
+        }
+    }, [currentStep]);
 
     const handleUploadSuccess = (data) => {
         setAnalysisData(data);
@@ -72,9 +117,9 @@ const ResumeAnalyzerPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 py-12 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 py-12 px-4" ref={containerRef}>
             {/* Header */}
-            <div className="max-w-6xl mx-auto mb-8">
+            <div className="max-w-6xl mx-auto mb-8 analyzer-header opacity-0">
                 <button
                     onClick={() => navigate('/dashboard')}
                     className="flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors mb-6"
@@ -98,7 +143,7 @@ const ResumeAnalyzerPage = () => {
                 </div>
 
                 {/* Progress Steps */}
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analyzer-steps opacity-0">
                     <div className="flex items-center justify-between">
                         {steps.map((step, index) => (
                             <div key={step.number} className="flex items-center flex-1">
@@ -106,10 +151,10 @@ const ResumeAnalyzerPage = () => {
                                     {/* Step Circle */}
                                     <div
                                         className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all ${step.completed
-                                                ? 'bg-green-500 text-white'
-                                                : step.active
-                                                    ? 'bg-indigo-600 text-white'
-                                                    : 'bg-gray-200 text-gray-500'
+                                            ? 'bg-green-500 text-white'
+                                            : step.active
+                                                ? 'bg-indigo-600 text-white'
+                                                : 'bg-gray-200 text-gray-500'
                                             }`}
                                     >
                                         {step.completed ? '✓' : step.number}
@@ -142,9 +187,9 @@ const ResumeAnalyzerPage = () => {
             </div>
 
             {/* Main Content */}
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto analyzer-content">
                 {currentStep === 1 && (
-                    <div className="animate-fadeIn">
+                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
                         <ResumeUploader
                             onUploadSuccess={handleUploadSuccess}
                             isLoading={isLoading}
@@ -154,7 +199,7 @@ const ResumeAnalyzerPage = () => {
                 )}
 
                 {currentStep === 2 && analysisData && (
-                    <div className="animate-fadeIn">
+                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
                         <AnalysisResults
                             analysisData={analysisData}
                             onProceedToEnhance={handleProceedToEnhance}
@@ -163,7 +208,7 @@ const ResumeAnalyzerPage = () => {
                 )}
 
                 {currentStep === 3 && (
-                    <div className="animate-fadeIn">
+                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
                         <EnhancementSummary
                             enhancementData={enhancementData}
                             isGenerating={isLoading}
@@ -184,7 +229,7 @@ const ResumeAnalyzerPage = () => {
             </div>
 
             {/* Help Section */}
-            <div className="max-w-6xl mx-auto mt-12">
+            <div className="max-w-6xl mx-auto mt-12 analyzer-anim-item opacity-0">
                 <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">How It Works</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

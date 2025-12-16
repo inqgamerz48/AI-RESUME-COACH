@@ -2,35 +2,102 @@
  * Home/Landing Page
  */
 import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import anime from 'animejs/lib/anime.es.js';
 import { useAuthStore } from '../store/store';
 import Button from '../components/Button';
 
 export default function Home() {
     const { isAuthenticated } = useAuthStore();
 
+    // Refs for animation targets
+    const heroRef = useRef(null);
+    const featuresRef = useRef(null);
+    const pricingRef = useRef(null);
+    const ctaRef = useRef(null);
+
+    useEffect(() => {
+        // Hero Section Animation
+        anime({
+            targets: heroRef.current.querySelectorAll('.hero-anim'),
+            translateY: [50, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1000,
+            delay: anime.stagger(200, { start: 100 })
+        });
+
+        // Features Animation
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: featuresRef.current.querySelectorAll('.card'),
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        easing: 'easeOutExpo',
+                        duration: 800,
+                        delay: anime.stagger(150)
+                    });
+                    featureObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        if (featuresRef.current) {
+            featureObserver.observe(featuresRef.current);
+        }
+
+        // Pricing Animation
+        const pricingObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: pricingRef.current.querySelectorAll('.pricing-item'),
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        easing: 'easeOutExpo',
+                        duration: 800,
+                        delay: anime.stagger(150)
+                    });
+                    pricingObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        if (pricingRef.current) {
+            pricingObserver.observe(pricingRef.current);
+        }
+
+        return () => {
+            featureObserver.disconnect();
+            pricingObserver.disconnect();
+        };
+    }, []);
+
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <section className="py-20 px-4">
+            <section className="py-20 px-4" ref={heroRef}>
                 <div className="max-w-6xl mx-auto text-center">
-                    <div className="mb-8">
+                    <div className="mb-8 hero-anim opacity-0">
                         <span className="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold mb-6">
                             🚀 AI-Powered Resume Builder for Freshers
                         </span>
                     </div>
 
-                    <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                    <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight hero-anim opacity-0">
                         Build Your Dream Resume
                         <br />
                         <span className="gradient-text">With AI Assistance</span>
                     </h1>
 
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10 hero-anim opacity-0">
                         Transform your raw experience into professional, ATS-optimized resume content.
                         Perfect for students and freshers entering the job market.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 hero-anim opacity-0">
                         {isAuthenticated ? (
                             <>
                                 <Link to="/dashboard">
@@ -54,21 +121,21 @@ export default function Home() {
                         )}
                     </div>
 
-                    <p className="text-sm text-gray-500 mt-4">
+                    <p className="text-sm text-gray-500 mt-4 hero-anim opacity-0">
                         ✨ No credit card required • 3 free AI improvements
                     </p>
                 </div>
             </section>
 
             {/* Features Grid */}
-            <section className="py-20 px-4 bg-white/50">
+            <section className="py-20 px-4 bg-white/50" ref={featuresRef}>
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-4xl font-bold text-center mb-12">
                         Why Choose <span className="gradient-text">AI Resume Coach</span>?
                     </h2>
 
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="card text-center">
+                        <div className="card text-center opacity-0">
                             <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -80,7 +147,7 @@ export default function Home() {
                             </p>
                         </div>
 
-                        <div className="card text-center">
+                        <div className="card text-center opacity-0">
                             <div className="w-16 h-16 bg-gradient-to-br from-accent-100 to-accent-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-8 h-8 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -92,7 +159,7 @@ export default function Home() {
                             </p>
                         </div>
 
-                        <div className="card text-center">
+                        <div className="card text-center opacity-0">
                             <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -108,7 +175,7 @@ export default function Home() {
             </section>
 
             {/* Tier Comparison */}
-            <section className="py-20 px-4">
+            <section className="py-20 px-4" ref={pricingRef}>
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-4xl font-bold text-center mb-4">
                         Simple, Transparent Pricing
@@ -118,7 +185,7 @@ export default function Home() {
                     </p>
 
                     <div className="grid md:grid-cols-3 gap-6">
-                        <div className="pricing-card">
+                        <div className="pricing-card pricing-item opacity-0">
                             <h3 className="text-xl font-bold mb-2">FREE</h3>
                             <div className="text-3xl font-bold mb-4">$0</div>
                             <p className="text-sm text-gray-600 mb-4">Perfect for trying out</p>
@@ -130,7 +197,7 @@ export default function Home() {
                             </ul>
                         </div>
 
-                        <div className="pricing-card-popular">
+                        <div className="pricing-card-popular pricing-item opacity-0">
                             <h3 className="text-xl font-bold mb-2">PRO</h3>
                             <div className="text-3xl font-bold mb-4">$9.99<span className="text-sm font-normal">/mo</span></div>
                             <p className="text-sm text-gray-600 mb-4">For serious job seekers</p>
@@ -143,7 +210,7 @@ export default function Home() {
                             </ul>
                         </div>
 
-                        <div className="pricing-card">
+                        <div className="pricing-card pricing-item opacity-0">
                             <h3 className="text-xl font-bold mb-2">ULTIMATE</h3>
                             <div className="text-3xl font-bold mb-4">$19.99<span className="text-sm font-normal">/mo</span></div>
                             <p className="text-sm text-gray-600 mb-4">Unlimited power</p>

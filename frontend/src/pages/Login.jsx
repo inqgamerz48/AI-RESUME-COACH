@@ -1,8 +1,9 @@
 /**
  * Login Page
  */
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import anime from 'animejs/lib/anime.es.js';
 import { authService } from '../services/api';
 import { useAuthStore } from '../store/store';
 import Button from '../components/Button';
@@ -15,6 +16,19 @@ export default function Login() {
 
     const setAuth = useAuthStore((state) => state.setAuth);
     const navigate = useNavigate();
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        // Stagger animation for form elements
+        anime({
+            targets: containerRef.current.querySelectorAll('.login-anim'),
+            translateY: [20, 0],
+            opacity: [0, 1],
+            delay: anime.stagger(100),
+            easing: 'easeOutExpo',
+            duration: 800
+        });
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,22 +47,22 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen flex items-center justify-center px-4 py-12" ref={containerRef}>
             <div className="max-w-md w-full">
-                <div className="text-center mb-8">
+                <div className="text-center mb-8 login-anim opacity-0">
                     <h1 className="text-4xl font-bold gradient-text mb-2">Welcome Back</h1>
                     <p className="text-gray-600">Sign in to continue building your resume</p>
                 </div>
 
-                <div className="card">
+                <div className="card login-anim opacity-0">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
+                            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded login-anim">
                                 {error}
                             </div>
                         )}
 
-                        <div>
+                        <div className="login-anim opacity-0">
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Email Address
                             </label>
@@ -62,7 +76,7 @@ export default function Login() {
                             />
                         </div>
 
-                        <div>
+                        <div className="login-anim opacity-0">
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Password
                             </label>
@@ -76,12 +90,14 @@ export default function Login() {
                             />
                         </div>
 
-                        <Button type="submit" disabled={loading} className="w-full">
-                            {loading ? 'Signing in...' : 'Sign In'}
-                        </Button>
+                        <div className="login-anim opacity-0">
+                            <Button type="submit" disabled={loading} className="w-full">
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </Button>
+                        </div>
                     </form>
 
-                    <div className="mt-6 text-center">
+                    <div className="mt-6 text-center login-anim opacity-0">
                         <p className="text-gray-600">
                             Don't have an account?{' '}
                             <Link to="/register" className="text-primary-600 font-semibold hover:underline">

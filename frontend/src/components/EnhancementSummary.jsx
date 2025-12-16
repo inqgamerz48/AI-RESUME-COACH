@@ -1,6 +1,25 @@
+import { useRef, useEffect } from 'react';
 import { CheckCircle, Download, TrendingUp, FileText, Sparkles } from 'lucide-react';
+import anime from 'animejs/lib/anime.es.js';
 
 const EnhancementSummary = ({ enhancementData, isGenerating }) => {
+    const containerRef = useRef(null);
+    const loadingRef = useRef(null);
+
+    // Animate success state
+    useEffect(() => {
+        if (!isGenerating && enhancementData && containerRef.current) {
+            anime({
+                targets: containerRef.current.querySelectorAll('.success-anim'),
+                translateY: [20, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                easing: 'easeOutExpo',
+                duration: 800
+            });
+        }
+    }, [isGenerating, enhancementData]);
+
     const {
         enhanced_resume_id,
         analysis_id,
@@ -49,7 +68,7 @@ const EnhancementSummary = ({ enhancementData, isGenerating }) => {
     if (isGenerating) {
         return (
             <div className="w-full max-w-2xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
+                <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100" ref={loadingRef}>
                     <div className="text-center">
                         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100 mb-6">
                             <Sparkles className="w-10 h-10 text-indigo-600 animate-pulse" />
@@ -74,8 +93,8 @@ const EnhancementSummary = ({ enhancementData, isGenerating }) => {
     }
 
     return (
-        <div className="w-full max-w-3xl mx-auto">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-2xl p-8 border-2 border-green-200">
+        <div className="w-full max-w-3xl mx-auto" ref={containerRef}>
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-2xl p-8 border-2 border-green-200 success-anim opacity-0">
                 {/* Success Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4">
