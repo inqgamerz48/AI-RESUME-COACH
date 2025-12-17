@@ -27,12 +27,15 @@ class AIService:
         OpenRouter uses OpenAI-compatible API format.
         SECURITY: This method is NOT exposed to users.
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         api_url = "https://openrouter.ai/api/v1/chat/completions"
         headers = {
             "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://ai-resume-coach.com",  # Optional but recommended
-            "X-Title": "AI Resume Coach"  # Optional but recommended
+            "HTTP-Referer": "https://ai-resume-coach.com",
+            "X-Title": "AI Resume Coach"
         }
         
         payload = {
@@ -53,20 +56,93 @@ class AIService:
         }
         
         try:
+            logger.info(f"Calling OpenRouter API with model: {settings.AI_MODEL}")
             response = requests.post(api_url, headers=headers, json=payload, timeout=30)
+            
+            # Log response status
+            logger.info(f"OpenRouter response status: {response.status_code}")
+            
+            # Check for various error codes
+            if response.status_code == 401:
+                logger.error("OpenRouter API key is invalid or expired")
+                raise HTTPException(
+                    status_code=503, 
+                    detail="AI service authentication failed. Please contact support."
+                )
+            
+            if response.status_code == 402:
+                logger.error("OpenRouter account has insufficient credits")
+                raise HTTPException(
+                    status_code=503,
+                    detail="AI service temporarily unavailable. Please try again later."
+                )
+            
+            if response.status_code == 429:
+                logger.error("OpenRouter rate limit exceeded")
+                raise HTTPException(
+                    status_code=429,
+                    detail="Too many requests. Please wait a moment and try again."
+                )
+            
+            if response.status_code >= 500:
+                logger.error(f"OpenRouter server error: {response.status_code}")
+                error_detail = "AI service is temporarily unavailable. Please try again in a few moments."
+                try:
+                    error_data = response.json()
+                    if "error" in error_data:
+                        logger.error(f"OpenRouter error details: {error_data['error']}")
+                except:
+                    pass
+                raise HTTPException(status_code=503, detail=error_detail)
+            
+            # Raise for other error status codes
             response.raise_for_status()
+            
             result = response.json()
+            logger.info("Successfully received response from OpenRouter")
             
             # Extract message from OpenAI-compatible response
             if "choices" in result and len(result["choices"]) > 0:
-                return result["choices"][0]["message"]["content"].strip()
+                content = result["choices"][0]["message"]["content"].strip()
+                if content:
+                    return content
+                else:
+                    logger.error("OpenRouter returned empty content")
+                    raise HTTPException(
+                        status_code=500, 
+                        detail="AI service returned empty response. Please try again."
+                    )
             
-            raise HTTPException(status_code=500, detail="Invalid AI response format")
+            logger.error(f"Unexpected OpenRouter response format: {result}")
+            raise HTTPException(
+                status_code=500, 
+                detail="Unexpected AI response format. Please try again."
+            )
         
         except requests.exceptions.Timeout:
-            raise HTTPException(status_code=504, detail="AI service timeout. Please try again.")
-        except requests.exceptions.RequestException as e:
-            raise HTTPException(status_code=503, detail=f"AI service unavailable: {str(e)}")
+            logger.error("OpenRouter request timed out")
+            raise HTTPException(
+                status_code=504, 
+                detail="AI service timeout. The request took too long. Please try again."
+            )
+        
+        except requests.exceptions.ConnectionError:
+            logger.error("Failed to connect to OpenRouter")
+            raise HTTPException(
+                status_code=503,
+                detail="Unable to connect to AI service. Please check your internet connection."
+            )
+        
+        except HTTPException:
+            # Re-raise HTTPExceptions as-is
+            raise
+        
+        except Exception as e:
+            logger.error(f"Unexpected error calling OpenRouter: {str(e)}")
+            raise HTTPException(
+                status_code=503, 
+                detail=f"AI service error: {str(e)}"
+            )
     
     @staticmethod
     def rewrite_bullet_point(raw_text: str, tone: str = "professional") -> str:
