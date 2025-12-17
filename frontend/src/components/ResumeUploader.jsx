@@ -114,7 +114,8 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
                 });
             }, 200);
 
-            const response = await fetch('http://localhost:8000/api/v1/resume/analyze', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiUrl}/api/v1/resume/analyze`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
