@@ -3,7 +3,7 @@
  */
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 import { useAuthStore } from '../store/store';
 
 export default function Navbar() {

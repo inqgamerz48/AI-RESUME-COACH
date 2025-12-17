@@ -3,7 +3,7 @@
  */
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 import { authService } from '../services/api';
 import { useAuthStore } from '../store/store';
 import Button from '../components/Button';

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileSearch } from 'lucide-react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 import ResumeUploader from '../components/ResumeUploader';
 import AnalysisResults from '../components/AnalysisResults';
 import EnhancementSummary from '../components/EnhancementSummary';

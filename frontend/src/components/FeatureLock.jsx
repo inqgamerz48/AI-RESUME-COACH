@@ -3,7 +3,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { useUIStore } from '../store/store';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 export default function FeatureLock({ feature, plan, children }) {
     const setShowUpgradeModal = useUIStore((state) => state.setShowUpgradeModal);

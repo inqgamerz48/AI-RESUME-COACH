@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
     const [templates, setTemplates] = useState([]);

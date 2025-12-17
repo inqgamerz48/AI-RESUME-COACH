@@ -3,7 +3,7 @@ import {
     CheckCircle, XCircle, AlertCircle, TrendingUp, Shield, Layout,
     Briefcase, ChevronDown, ChevronUp, Sparkles
 } from 'lucide-react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
     const [selectedSuggestions, setSelectedSuggestions] = useState([]);

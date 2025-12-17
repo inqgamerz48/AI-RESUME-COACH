@@ -4,7 +4,7 @@
 import { useEffect, useRef } from 'react';
 import { useUIStore } from '../store/store';
 import { useNavigate } from 'react-router-dom';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 export default function UpgradeModal() {
     const { showUpgradeModal, upgradeMessage, setShowUpgradeModal } = useUIStore();

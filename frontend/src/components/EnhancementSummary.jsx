@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { CheckCircle, Download, TrendingUp, FileText, Sparkles } from 'lucide-react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 const EnhancementSummary = ({ enhancementData, isGenerating }) => {
     const containerRef = useRef(null);

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Upload, FileText, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
     const [dragActive, setDragActive] = useState(false);
