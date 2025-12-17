@@ -114,7 +114,7 @@ temp/
 # System files
 *.pyc
 .Python
-.python-version
+
 celerybeat-schedule
 celerybeat.pid
 
