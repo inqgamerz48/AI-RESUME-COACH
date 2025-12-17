@@ -20,8 +20,8 @@ def get_current_user(
     Dependency to get current authenticated user.
     Validates JWT token and returns User object.
     """
-    # Decode token
-    payload = decode_access_token(token)
+    # Decode token - Extract the token string from the HTTPAuthorizationCredentials object
+    payload = decode_access_token(token.credentials)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
