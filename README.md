@@ -92,12 +92,12 @@ Built with a **3-tier monetization system** (FREE, PRO, ULTIMATE), this applicat
 
 | Layer | Technologies |
 |-------|-------------|
-| **Frontend** | React 18, Vite, Tailwind CSS, Zustand, Axios, React Router |
+| **Frontend** | Next.js 15+, Tailwind CSS 3.4+, Zustand, Axios |
 | **Backend** | FastAPI, Python 3.9+, SQLAlchemy, Pydantic, JWT |
 | **Database** | PostgreSQL (Neon recommended) |
 | **AI** | Hugging Face Inference API (`google/flan-t5-small`) |
 | **PDF** | ReportLab |
-| **Deployment** | Render (Backend), Vercel/Netlify (Frontend) |
+| **Deployment** | Render (Backend), Vercel (Frontend) |
 
 </div>
 
@@ -168,45 +168,45 @@ uvicorn app.main:app --reload
 **Backend runs at:** `http://localhost:8000`
 
 #### Frontend Setup
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Configure environment
-echo "VITE_API_URL=http://localhost:8000" > .env
-
-# Run development server
-npm run dev
-```
-
-**Frontend runs at:** `http://localhost:5173`
-
-### Environment Variables
-
-<details>
-<summary>📝 Click to see all required environment variables</summary>
-
-**Backend `.env`:**
-```bash
-DATABASE_URL=postgresql://user:password@host:5432/database
-SECRET_KEY=your-secret-key-min-32-characters
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-HUGGINGFACE_API_KEY=hf_your_api_key_here
-FRONTEND_URL=http://localhost:5173
-ENVIRONMENT=development
-RATE_LIMIT_PER_MINUTE=10
-```
-
-**Frontend `.env`:**
-```bash
-VITE_API_URL=http://localhost:8000
-```
-
-</details>
+ 
+ ```bash
+ cd frontend
+ 
+ # Install dependencies
+ npm install
+ 
+ # Configure environment
+ echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+ 
+ # Run development server
+ npm run dev
+ ```
+ 
+ **Frontend runs at:** `http://localhost:3000`
+ 
+ ### Environment Variables
+ 
+ <details>
+ <summary>📝 Click to see all required environment variables</summary>
+ 
+ **Backend `.env`:**
+ ```bash
+ DATABASE_URL=postgresql://user:password@host:5432/database
+ SECRET_KEY=your-secret-key-min-32-characters
+ ALGORITHM=HS256
+ ACCESS_TOKEN_EXPIRE_MINUTES=30
+ HUGGINGFACE_API_KEY=hf_your_api_key_here
+ FRONTEND_URL=http://localhost:3000
+ ENVIRONMENT=development
+ RATE_LIMIT_PER_MINUTE=10
+ ```
+ 
+ **Frontend `.env.local`:**
+ ```bash
+ NEXT_PUBLIC_API_URL=http://localhost:8000
+ ```
+ 
+ </details>
 
 ---
 
@@ -242,11 +242,10 @@ Comprehensive guides are available in the repository:
 
 1. Import your repository on [Vercel](https://vercel.com)
 2. Configure:
-   - **Framework Preset**: Vite
+   - **Framework Preset**: Next.js
    - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-3. Add `VITE_API_URL` environment variable
+   - **Build Command**: `npm run build` (or `next build`)
+3. Add `NEXT_PUBLIC_API_URL` environment variable pointing to your backend URL
 
 ### Database → Neon
 
@@ -309,18 +308,18 @@ FRESHER RESUME MAKER/
 │
 ├── 📁 frontend/
 │   ├── src/
+│   │   ├── app/                  # Next.js App Router Pages
 │   │   ├── components/           # Reusable components
-│   │   ├── pages/                # Page components
 │   │   ├── services/             # API client
-│   │   ├── store/                # State management
-│   │   └── App.jsx
+│   │   ├── store/                # State management (Zustand)
+│   ├── public/                   # Static assets
 │   ├── package.json
-│   └── vite.config.js
+│   ├── next.config.mjs
+│   └── tailwind.config.js
 │
 ├── 📄 README.md
-├── 📄 API_DOCS.md
-├── 📄 DEPLOYMENT.md
-├── 📄 SECURITY.md
+├── 📁 docs/                      # Documentation
+├── 📁 scripts/                   # Setup scripts
 └── 📄 LICENSE
 ```
 

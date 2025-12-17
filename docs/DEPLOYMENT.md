@@ -72,48 +72,49 @@ curl https://your-api.onrender.com/health
 ---
 
 ## Frontend Deployment (Vercel)
-
-### Step 1: Prepare for Build
-
-Ensure `frontend/package.json` has:
-```json
-{
-  "scripts": {
-    "build": "vite build",
-    "preview": "vite preview"
-  }
-}
-```
-
-### Step 2: Create Vercel Project
-
-1. Go to [vercel.com](https://vercel.com)
-2. Click "Add New" → "Project"
-3. Import your GitHub repository
-4. Configure:
-   - **Framework Preset**: Vite
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-   - **Install Command**: `npm install`
-
-### Step 3: Environment Variables
-
-Add in Vercel dashboard:
-
-```
-VITE_API_URL=https://your-api.onrender.com
-```
-
-### Step 4: Deploy
-
-Click "Deploy" — Vercel will build and deploy automatically.
-
-### Step 5: Custom Domain (Optional)
-
-1. Go to Project Settings → Domains
-2. Add your custom domain
-3. Configure DNS records as instructed
+ 
+ ### Step 1: Prepare for Build
+ 
+ Ensure `frontend/package.json` has next scripts:
+ ```json
+ {
+   "scripts": {
+     "dev": "next dev",
+     "build": "next build",
+     "start": "next start"
+   }
+ }
+ ```
+ 
+ ### Step 2: Create Vercel Project
+ 
+ 1. Go to [vercel.com](https://vercel.com)
+ 2. Click "Add New" → "Project"
+ 3. Import your GitHub repository
+ 4. Configure:
+    - **Framework Preset**: Next.js (Usually auto-detected)
+    - **Root Directory**: `frontend`
+    - **Build Command**: `next build` (or `npm run build`)
+    - **Output Directory**: (Leave Default)
+    - **Install Command**: `npm install`
+ 
+ ### Step 3: Environment Variables
+ 
+ Add in Vercel dashboard:
+ 
+ ```
+ NEXT_PUBLIC_API_URL=https://your-api.onrender.com
+ ```
+ 
+ ### Step 4: Deploy
+ 
+ Click "Deploy" — Vercel will build and deploy automatically.
+ 
+ ### Step 5: Custom Domain (Optional)
+ 
+ 1. Go to Project Settings → Domains
+ 2. Add your custom domain
+ 3. Configure DNS records as instructed
 
 ---
 
@@ -301,7 +302,7 @@ pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
 
 **White Screen**
 - Check browser console
-- Verify VITE_API_URL is correct
+- Verify NEXT_PUBLIC_API_URL is correct
 - Check CORS settings
 
 **API Connection Failed**
