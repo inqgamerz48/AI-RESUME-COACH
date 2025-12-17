@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     
     # AI
     HUGGINGFACE_API_KEY: str
-    AI_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.2"
+    AI_MODEL: str = "HuggingFaceH4/zephyr-7b-beta"
     AI_MAX_TOKENS: int = 150
     AI_TEMPERATURE: float = 0.7
     AI_TOP_P: float = 0.9
