@@ -95,7 +95,7 @@ Built with a **3-tier monetization system** (FREE, PRO, ULTIMATE), this applicat
 | **Frontend** | Next.js 15+, Tailwind CSS 3.4+, Zustand, Axios |
 | **Backend** | FastAPI, Python 3.9+, SQLAlchemy, Pydantic, JWT |
 | **Database** | PostgreSQL (Neon recommended) |
-| **AI** | Hugging Face Inference API (`google/flan-t5-small`) |
+| **AI** | OpenRouter API (Llama 3.1 8B Instruct - Free Tier) |
 | **PDF** | ReportLab |
 | **Deployment** | Render (Backend), Vercel (Frontend) |
 
@@ -127,7 +127,7 @@ Built with a **3-tier monetization system** (FREE, PRO, ULTIMATE), this applicat
 - Python 3.9 or higher
 - Node.js 18 or higher
 - PostgreSQL database ([Neon](https://neon.tech) recommended for free tier)
-- [Hugging Face API Key](https://huggingface.co/settings/tokens) (free)
+- [OpenRouter API Key](https://openrouter.ai/keys) (free tier available)
 
 ### Option 1: Automated Setup (Recommended)
 
@@ -159,7 +159,7 @@ pip install -r requirements.txt
 
 # Configure environment
 cp ../.env.example .env
-# Edit .env with your DATABASE_URL, SECRET_KEY, HUGGINGFACE_API_KEY
+# Edit .env with your DATABASE_URL, SECRET_KEY, OPENROUTER_API_KEY
 
 # Run server
 uvicorn app.main:app --reload
@@ -195,7 +195,7 @@ uvicorn app.main:app --reload
  SECRET_KEY=your-secret-key-min-32-characters
  ALGORITHM=HS256
  ACCESS_TOKEN_EXPIRE_MINUTES=30
- HUGGINGFACE_API_KEY=hf_your_api_key_here
+ OPENROUTER_API_KEY=sk-or-v1-your-openrouter-api-key
  FRONTEND_URL=http://localhost:3000
  ENVIRONMENT=development
  RATE_LIMIT_PER_MINUTE=10
@@ -217,6 +217,7 @@ Comprehensive guides are available in the repository:
 | Document | Description |
 |----------|-------------|
 | **[API Documentation](docs/API_DOCS.md)** | Complete API reference with examples |
+| **[OpenRouter Setup](OPENROUTER_SETUP.md)** | OpenRouter AI integration guide |
 | **[Security Guide](docs/SECURITY.md)** | Security features and best practices |
 | **[Deployment Guide](docs/DEPLOYMENT.md)** | Step-by-step deployment guide |
 | **[Contributing Guidelines](docs/CONTRIBUTING.md)** | Development guidelines |
@@ -411,9 +412,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## 🙏 Acknowledgments
 
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
-- [React](https://react.dev/) - UI library
+- [Next.js](https://nextjs.org/) - React framework
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [Hugging Face](https://huggingface.co/) - AI model infrastructure
+- [OpenRouter](https://openrouter.ai/) - AI model API gateway
 - [Neon](https://neon.tech/) - Serverless PostgreSQL
 
 ---

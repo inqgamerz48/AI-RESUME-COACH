@@ -47,7 +47,7 @@ DATABASE_URL=postgresql://user:password@host:5432/db
 SECRET_KEY=<GENERATE_NEW_32_CHAR_KEY>
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-HUGGINGFACE_API_KEY=hf_your_production_key
+OPENROUTER_API_KEY=sk-or-v1-your-openrouter-api-key
 FRONTEND_URL=https://your-frontend-domain.com
 ENVIRONMENT=production
 RATE_LIMIT_PER_MINUTE=10
@@ -247,7 +247,7 @@ pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
 - **Render**: Free web service (sleeps after 15min inactivity)
 - **Vercel**: Free hobby plan
 - **Neon**: Free tier (0.5 GB storage)
-- **Hugging Face**: Free tier (rate limited)
+- **OpenRouter**: Free tier models available
 
 **Total**: $0/month
 
@@ -255,9 +255,9 @@ pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
 - **Render**: Standard ($7/month)
 - **Vercel**: Pro ($20/month)
 - **Neon**: Pro ($19/month)
-- **Hugging Face**: Pay-as-you-go
+- **OpenRouter**: Free tier or pay-as-you-go (depends on usage)
 
-**Total**: ~$50-60/month
+**Total**: ~$46-60/month
 
 ---
 
@@ -296,7 +296,8 @@ pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
 
 **AI Timeout**
 - Increase timeout in `ai_service.py`
-- Check Hugging Face API status
+- Check OpenRouter API status at https://openrouter.ai/status
+- Verify OPENROUTER_API_KEY is valid
 
 ### Frontend Issues
 

@@ -2,6 +2,46 @@
 
 All notable changes to AI Resume Coach will be documented in this file.
 
+## [1.1.0] - 2025-12-17
+
+### 🚀 Major Updates
+
+#### Changed
+- **Migrated from Hugging Face to OpenRouter API** for AI features
+  - More reliable AI service with multiple model options
+  - Default to `meta-llama/llama-3.1-8b-instruct:free` (free tier)
+  - OpenAI-compatible API format for better compatibility
+  - Improved error handling and timeout management
+
+#### Added
+- **Dashboard AI Features** fully implemented
+  - Project Description Generator (PRO+)
+  - Resume Summary Generator (PRO+)
+  - All features with proper loading states and error handling
+- **OpenRouter Setup Guide** (`OPENROUTER_SETUP.md`)
+  - Complete integration instructions
+  - Model selection guide
+  - Troubleshooting section
+
+#### Fixed
+- **Backend Authentication** - Fixed token extraction from HTTPAuthorizationCredentials
+- **Frontend Error Handling** - Safely parse backend validation errors (objects/arrays)
+- **React Crash Fix** - Prevent Error #31 when rendering error objects
+- **ESLint Warnings** - Resolved all linting issues in Navbar and TemplateGallery
+- **HTML Entities** - Fixed unescaped apostrophes across multiple files
+
+#### Security
+- Enhanced error message parsing to prevent object rendering in React
+- Improved input sanitization in AI service
+
+### 📝 Documentation Updates
+- Updated README with OpenRouter integration details
+- Added comprehensive setup guide for OpenRouter
+- Updated all environment variable examples
+- Updated tech stack documentation
+
+---
+
 ## [1.0.0] - 2024-12-14
 
 ### 🎉 Initial MVP Release
