@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# AI Resume Coach - Local Frontend Startup Script
+
+echo "🎨 Starting AI Resume Coach Frontend..."
+echo ""
+
+# Change to frontend directory
+cd "$(dirname "$0")/frontend"
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing dependencies..."
+    npm install
+fi
+
+# Check if .env.local exists
+if [ ! -f ".env.local" ]; then
+    echo "⚠️  Creating .env.local with default values..."
+    echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+    echo "✅ Created .env.local"
+fi
+
+# Start the dev server
+echo ""
+echo "🎯 Starting Next.js dev server on http://localhost:3000"
+echo ""
+echo "Press Ctrl+C to stop"
+echo "─────────────────────────────────────────────────────"
+
+npm run dev
