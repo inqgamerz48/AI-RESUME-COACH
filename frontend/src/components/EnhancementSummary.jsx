@@ -146,7 +146,7 @@ const EnhancementSummary = ({ enhancementData, isGenerating }) => {
                 {/* What's Improved */}
                 <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">
-                        What's Improved in Your Resume:
+                        What&apos;s Improved in Your Resume:
                     </h3>
                     <ul className="space-y-3">
                         <li className="flex items-start space-x-3">

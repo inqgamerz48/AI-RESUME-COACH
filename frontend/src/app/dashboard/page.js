@@ -21,6 +21,16 @@ export default function Dashboard() {
     const [usage, setUsage] = useState(null);
     const [error, setError] = useState('');
 
+    // Project Generator State
+    const [projectParams, setProjectParams] = useState({ name: '', stack: '', points: '' });
+    const [projectResponse, setProjectResponse] = useState('');
+    const [loadingProject, setLoadingProject] = useState(false);
+
+    // Summary Generator State
+    const [summaryParams, setSummaryParams] = useState({ skills: '', experience: '', goal: '' });
+    const [summaryResponse, setSummaryResponse] = useState('');
+    const [loadingSummary, setLoadingSummary] = useState(false);
+
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -64,10 +74,92 @@ export default function Dashboard() {
             if (errorData?.upgrade_required) {
                 setShowUpgradeModal(true, errorData.message);
             } else {
-                setError(errorData?.message || 'Failed to process request');
+                let errorMessage = 'Failed to process request';
+                if (typeof errorData === 'string') {
+                    errorMessage = errorData;
+                } else if (Array.isArray(errorData) && errorData.length > 0) {
+                    errorMessage = errorData[0].msg || JSON.stringify(errorData);
+                } else if (typeof errorData === 'object' && errorData !== null) {
+                    errorMessage = errorData.message || JSON.stringify(errorData);
+                }
+                setError(errorMessage);
             }
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleGenerateProject = async () => {
+        if (!projectParams.name || !projectParams.stack || !projectParams.points) {
+            setError('Please fill in all project fields');
+            return;
+        }
+
+        setLoadingProject(true);
+        setError('');
+
+        try {
+            const data = await aiService.generateProject(
+                projectParams.name,
+                projectParams.stack,
+                projectParams.points
+            );
+            setProjectResponse(data.result);
+            setUsage(data.usage);
+        } catch (err) {
+            const errorData = err.response?.data?.detail;
+            if (errorData?.upgrade_required) {
+                setShowUpgradeModal(true, errorData.message);
+            } else {
+                let errorMessage = 'Failed to generate project description';
+                if (typeof errorData === 'string') {
+                    errorMessage = errorData;
+                } else if (Array.isArray(errorData) && errorData.length > 0) {
+                    errorMessage = errorData[0].msg || JSON.stringify(errorData);
+                } else if (typeof errorData === 'object' && errorData !== null) {
+                    errorMessage = errorData.message || JSON.stringify(errorData);
+                }
+                setError(errorMessage);
+            }
+        } finally {
+            setLoadingProject(false);
+        }
+    };
+
+    const handleGenerateSummary = async () => {
+        if (!summaryParams.skills || !summaryParams.experience || !summaryParams.goal) {
+            setError('Please fill in all summary fields');
+            return;
+        }
+
+        setLoadingSummary(true);
+        setError('');
+
+        try {
+            const data = await aiService.generateSummary(
+                summaryParams.skills,
+                summaryParams.experience,
+                summaryParams.goal
+            );
+            setSummaryResponse(data.result);
+            setUsage(data.usage);
+        } catch (err) {
+            const errorData = err.response?.data?.detail;
+            if (errorData?.upgrade_required) {
+                setShowUpgradeModal(true, errorData.message);
+            } else {
+                let errorMessage = 'Failed to generate summary';
+                if (typeof errorData === 'string') {
+                    errorMessage = errorData;
+                } else if (Array.isArray(errorData) && errorData.length > 0) {
+                    errorMessage = errorData[0].msg || JSON.stringify(errorData);
+                } else if (typeof errorData === 'object' && errorData !== null) {
+                    errorMessage = errorData.message || JSON.stringify(errorData);
+                }
+                setError(errorMessage);
+            }
+        } finally {
+            setLoadingSummary(false);
         }
     };
 
@@ -87,7 +179,7 @@ export default function Dashboard() {
                         Resume Builder Dashboard
                     </h1>
                     <p className="text-gray-600">
-                        Welcome back! You're on the <strong>{user?.plan}</strong> plan
+                        Welcome back! You&apos;re on the <strong>{user?.plan}</strong> plan
                     </p>
 
                     {/* Usage Stats */}
@@ -186,7 +278,43 @@ export default function Dashboard() {
                                 <p className="text-gray-600 text-sm">
                                     Generate professional project descriptions for your resume
                                 </p>
-                                {/* Add project generation form here */}
+                                <div className="space-y-4">
+                                    <input
+                                        className="input-field"
+                                        placeholder="Project Name (e.g. E-commerce App)"
+                                        value={projectParams.name}
+                                        onChange={(e) => setProjectParams({ ...projectParams, name: e.target.value })}
+                                    />
+                                    <input
+                                        className="input-field"
+                                        placeholder="Tech Stack (e.g. React, Node.js, MongoDB)"
+                                        value={projectParams.stack}
+                                        onChange={(e) => setProjectParams({ ...projectParams, stack: e.target.value })}
+                                    />
+                                    <textarea
+                                        className="input-field min-h-[100px]"
+                                        placeholder="Key Points / Features (e.g. User auth, payment gateway)"
+                                        value={projectParams.points}
+                                        onChange={(e) => setProjectParams({ ...projectParams, points: e.target.value })}
+                                    />
+
+                                    <Button onClick={handleGenerateProject} disabled={loadingProject} className="w-full">
+                                        {loadingProject ? 'Generating Description...' : 'Generate Description'}
+                                    </Button>
+
+                                    {projectResponse && (
+                                        <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                                            <h4 className="font-semibold text-green-900 mb-2">✅ Generated Description:</h4>
+                                            <p className="text-green-800 whitespace-pre-line">{projectResponse}</p>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(projectResponse)}
+                                                className="mt-2 text-sm text-green-600 hover:text-green-800 font-medium"
+                                            >
+                                                📋 Copy to clipboard
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : (
                             <FeatureLock feature="project_gen" plan="PRO">
@@ -210,7 +338,43 @@ export default function Dashboard() {
                                 <p className="text-gray-600 text-sm">
                                     Create a powerful resume summary statement
                                 </p>
-                                {/* Add summary generation form here */}
+                                <div className="space-y-4">
+                                    <input
+                                        className="input-field"
+                                        placeholder="Top Skills (e.g. Python, Data Analysis, SQL)"
+                                        value={summaryParams.skills}
+                                        onChange={(e) => setSummaryParams({ ...summaryParams, skills: e.target.value })}
+                                    />
+                                    <input
+                                        className="input-field"
+                                        placeholder="Experience Level (e.g. Fresh Grad, 2 years exp)"
+                                        value={summaryParams.experience}
+                                        onChange={(e) => setSummaryParams({ ...summaryParams, experience: e.target.value })}
+                                    />
+                                    <textarea
+                                        className="input-field min-h-[100px]"
+                                        placeholder="Career Goal (e.g. Seeking Data Scientist role)"
+                                        value={summaryParams.goal}
+                                        onChange={(e) => setSummaryParams({ ...summaryParams, goal: e.target.value })}
+                                    />
+
+                                    <Button onClick={handleGenerateSummary} disabled={loadingSummary} className="w-full">
+                                        {loadingSummary ? 'Generating Summary...' : 'Generate Summary'}
+                                    </Button>
+
+                                    {summaryResponse && (
+                                        <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                                            <h4 className="font-semibold text-green-900 mb-2">✅ Generated Summary:</h4>
+                                            <p className="text-green-800 whitespace-pre-line">{summaryResponse}</p>
+                                            <button
+                                                onClick={() => navigator.clipboard.writeText(summaryResponse)}
+                                                className="mt-2 text-sm text-green-600 hover:text-green-800 font-medium"
+                                            >
+                                                📋 Copy to clipboard
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : (
                             <FeatureLock feature="summary" plan="PRO">

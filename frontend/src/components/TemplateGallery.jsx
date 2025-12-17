@@ -45,14 +45,13 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
 
     useEffect(() => {
         fetchFilterOptions();
-        fetchTemplates();
-    }, []);
+    }, [fetchFilterOptions]);
 
     useEffect(() => {
         fetchTemplates();
-    }, [filter]);
+    }, [fetchTemplates]);
 
-    const fetchFilterOptions = async () => {
+    const fetchFilterOptions = React.useCallback(async () => {
         try {
             const [indResp, catResp, posResp] = await Promise.all([
                 api.get('/templates/industries/list'),
@@ -65,9 +64,9 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
         } catch (error) {
             console.error('Error fetching filter options:', error);
         }
-    };
+    }, []);
 
-    const fetchTemplates = async () => {
+    const fetchTemplates = React.useCallback(async () => {
         setLoading(true);
         try {
             const params = {};
@@ -82,7 +81,7 @@ const TemplateGallery = ({ onSelectTemplate, currentTemplateId }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filter]);
 
     const handleTemplateSelect = async (template) => {
         // Check if template is available in user's tier

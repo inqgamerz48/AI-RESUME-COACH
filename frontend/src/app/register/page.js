@@ -50,7 +50,16 @@ export default function Register() {
             setAuth(data.user, data.access_token);
             router.push('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+            let errorMessage = 'Registration failed. Please try again.';
+            const detail = err.response?.data?.detail;
+            if (typeof detail === 'string') {
+                errorMessage = detail;
+            } else if (Array.isArray(detail) && detail.length > 0) {
+                errorMessage = detail[0].msg || JSON.stringify(detail);
+            } else if (typeof detail === 'object' && detail !== null) {
+                errorMessage = detail.message || JSON.stringify(detail);
+            }
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

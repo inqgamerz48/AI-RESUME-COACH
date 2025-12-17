@@ -43,7 +43,16 @@ export default function Login() {
             setAuth(data.user, data.access_token);
             router.push('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.detail || 'Login failed. Please try again.');
+            let errorMessage = 'Login failed. Please try again.';
+            const detail = err.response?.data?.detail;
+            if (typeof detail === 'string') {
+                errorMessage = detail;
+            } else if (Array.isArray(detail) && detail.length > 0) {
+                errorMessage = detail[0].msg || JSON.stringify(detail);
+            } else if (typeof detail === 'object' && detail !== null) {
+                errorMessage = detail.message || JSON.stringify(detail);
+            }
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -102,7 +111,7 @@ export default function Login() {
 
                     <div className="mt-6 text-center login-anim opacity-0">
                         <p className="text-gray-600">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <Link href="/register" className="text-primary-600 font-semibold hover:underline">
                                 Sign up
                             </Link>
