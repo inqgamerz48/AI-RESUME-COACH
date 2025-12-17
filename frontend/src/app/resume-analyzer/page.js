@@ -1,13 +1,15 @@
+'use client';
+
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, FileSearch } from 'lucide-react';
 import anime from 'animejs';
-import ResumeUploader from '../components/ResumeUploader';
-import AnalysisResults from '../components/AnalysisResults';
-import EnhancementSummary from '../components/EnhancementSummary';
+import ResumeUploader from '@/components/ResumeUploader';
+import AnalysisResults from '@/components/AnalysisResults';
+import EnhancementSummary from '@/components/EnhancementSummary';
 
 const ResumeAnalyzerPage = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1); // 1: Upload, 2: Analysis, 3: Enhancement
     const [isLoading, setIsLoading] = useState(false);
     const [analysisData, setAnalysisData] = useState(null);
@@ -73,8 +75,9 @@ const ResumeAnalyzerPage = () => {
 
         try {
             const token = localStorage.getItem('token');
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             const response = await fetch(
-                `http://localhost:8000/api/v1/resume/enhance/${analysisData.analysis_id}`,
+                `${apiUrl}/api/v1/resume/enhance/${analysisData.analysis_id}`,
                 {
                     method: 'POST',
                     headers: {
@@ -121,7 +124,7 @@ const ResumeAnalyzerPage = () => {
             {/* Header */}
             <div className="max-w-6xl mx-auto mb-8 analyzer-header opacity-0">
                 <button
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => router.push('/dashboard')}
                     className="flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors mb-6"
                 >
                     <ArrowLeft className="w-5 h-5" />

@@ -1,14 +1,16 @@
+'use client';
+
 /**
  * Upgrade Modal Component
  */
 import { useEffect, useRef } from 'react';
-import { useUIStore } from '../store/store';
-import { useNavigate } from 'react-router-dom';
+import { useUIStore } from '@/store/store';
+import { useRouter } from 'next/navigation';
 import anime from 'animejs';
 
 export default function UpgradeModal() {
     const { showUpgradeModal, upgradeMessage, setShowUpgradeModal } = useUIStore();
-    const navigate = useNavigate();
+    const router = useRouter();
     const modalRef = useRef(null);
 
     useEffect(() => {
@@ -27,7 +29,7 @@ export default function UpgradeModal() {
 
     const handleUpgrade = () => {
         setShowUpgradeModal(false);
-        navigate('/pricing');
+        router.push('/pricing');
     };
 
     return (

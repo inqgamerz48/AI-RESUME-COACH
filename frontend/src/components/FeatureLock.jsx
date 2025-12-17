@@ -1,8 +1,10 @@
+'use client';
+
 /**
  * Feature Lock Component - Shows upgrade CTA when feature is locked
  */
 import { useEffect, useRef } from 'react';
-import { useUIStore } from '../store/store';
+import { useUIStore } from '@/store/store';
 import anime from 'animejs';
 
 export default function FeatureLock({ feature, plan, children }) {

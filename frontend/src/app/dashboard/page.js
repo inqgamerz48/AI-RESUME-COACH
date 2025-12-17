@@ -1,13 +1,15 @@
+'use client';
+
 /**
  * Dashboard - Resume Builder with AI Chat
  */
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import anime from 'animejs';
-import { useAuthStore, useUIStore } from '../store/store';
-import { aiService } from '../services/api';
-import Button from '../components/Button';
-import FeatureLock from '../components/FeatureLock';
+import { useAuthStore, useUIStore } from '@/store/store';
+import { aiService } from '@/services/api';
+import Button from '@/components/Button';
+import FeatureLock from '@/components/FeatureLock';
 
 export default function Dashboard() {
     const { user } = useAuthStore();
@@ -70,7 +72,11 @@ export default function Dashboard() {
     };
 
     const canUseProFeatures = user?.plan === 'PRO' || user?.plan === 'ULTIMATE';
-    const canUseUltimateFeatures = user?.plan === 'ULTIMATE';
+    // const canUseUltimateFeatures = user?.plan === 'ULTIMATE'; // Unused for now
+
+    if (!user) {
+        return <div className="min-h-screen flex items-center justify-center">Loading user data...</div>;
+    }
 
     return (
         <div className="min-h-screen py-12 px-4" ref={containerRef}>
@@ -111,7 +117,7 @@ export default function Dashboard() {
                                 </p>
                             </div>
                             <Link
-                                to="/resume-analyzer"
+                                href="/resume-analyzer"
                                 className="ml-4 bg-white text-indigo-600 font-bold py-3 px-6 rounded-lg hover:bg-indigo-50 transition-all transform hover:scale-105 shadow-lg whitespace-nowrap"
                             >
                                 Try Now →

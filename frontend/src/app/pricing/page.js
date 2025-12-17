@@ -1,20 +1,25 @@
+'use client';
+
 /**
  * Pricing Page - Shows all 3 tiers
  */
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import anime from 'animejs';
-import { billingService } from '../services/api';
-import { useAuthStore, useUIStore } from '../store/store';
-import Button from '../components/Button';
+import { billingService } from '@/services/api';
+import { useAuthStore, useUIStore } from '@/store/store';
+import Button from '@/components/Button';
 
 export default function Pricing() {
     const [plans, setPlans] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true); // Default false for static/mock data if preferred, but keeping true
     const { user, isAuthenticated } = useAuthStore();
     const setShowUpgradeModal = useUIStore((state) => state.setShowUpgradeModal);
-    const navigate = useNavigate();
+    const router = useRouter();
     const containerRef = useRef(null);
+
+    // Initial loading state
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadPlans();
@@ -46,7 +51,7 @@ export default function Pricing() {
 
     const handleSelectPlan = (planTier) => {
         if (!isAuthenticated) {
-            navigate('/register');
+            router.push('/register');
             return;
         }
 

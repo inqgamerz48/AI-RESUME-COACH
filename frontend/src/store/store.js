@@ -3,20 +3,38 @@
  */
 import { create } from 'zustand';
 
+const getUserFromStorage = () => {
+    if (typeof window !== 'undefined') {
+        return JSON.parse(localStorage.getItem('user') || 'null');
+    }
+    return null;
+};
+
+const getTokenFromStorage = () => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('access_token') || null;
+    }
+    return null;
+};
+
 export const useAuthStore = create((set) => ({
-    user: JSON.parse(localStorage.getItem('user') || 'null'),
-    token: localStorage.getItem('access_token') || null,
-    isAuthenticated: !!localStorage.getItem('access_token'),
+    user: getUserFromStorage(),
+    token: getTokenFromStorage(),
+    isAuthenticated: !!getTokenFromStorage(),
 
     setAuth: (user, token) => {
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('access_token', token);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('access_token', token);
+        }
         set({ user, token, isAuthenticated: true });
     },
 
     logout: () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('access_token');
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('user');
+            localStorage.removeItem('access_token');
+        }
         set({ user: null, token: null, isAuthenticated: false });
     },
 }));
