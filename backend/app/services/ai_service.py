@@ -77,6 +77,13 @@ class AIService:
                     detail="AI service temporarily unavailable. Please try again later."
                 )
             
+            if response.status_code == 404:
+                logger.error(f"OpenRouter model not found: {settings.AI_MODEL}")
+                raise HTTPException(
+                    status_code=503,
+                    detail="AI model configuration error. Please contact support."
+                )
+            
             if response.status_code == 429:
                 logger.error("OpenRouter rate limit exceeded")
                 raise HTTPException(
