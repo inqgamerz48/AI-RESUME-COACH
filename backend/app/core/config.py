@@ -22,9 +22,9 @@ class Settings(BaseSettings):
     
     # AI
     HUGGINGFACE_API_KEY: str
-    AI_MODEL: str = "google/flan-t5-small"
-    AI_MAX_TOKENS: int = 80
-    AI_TEMPERATURE: float = 0.6
+    AI_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.2"
+    AI_MAX_TOKENS: int = 150
+    AI_TEMPERATURE: float = 0.7
     AI_TOP_P: float = 0.9
     
     # CORS
