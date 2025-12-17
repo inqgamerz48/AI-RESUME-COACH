@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str
     
-    # AI
-    HUGGINGFACE_API_KEY: str
-    AI_MODEL: str = "microsoft/phi-2"
+    # AI - OpenRouter Configuration
+    OPENROUTER_API_KEY: str
+    AI_MODEL: str = "meta-llama/llama-3.1-8b-instruct:free"  # Free tier model
     AI_MAX_TOKENS: int = 200
     AI_TEMPERATURE: float = 0.7
     AI_TOP_P: float = 0.9

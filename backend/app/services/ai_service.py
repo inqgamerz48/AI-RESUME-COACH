@@ -21,22 +21,35 @@ class AIService:
     """Hugging Face AI integration service."""
     
     @staticmethod
-    def _call_huggingface(prompt: str) -> str:
+    def _call_openrouter(prompt: str) -> str:
         """
-        Internal method to call Hugging Face Inference API.
+        Internal method to call OpenRouter API.
+        OpenRouter uses OpenAI-compatible API format.
         SECURITY: This method is NOT exposed to users.
         """
-        api_url = f"https://api-inference.huggingface.co/models/{settings.AI_MODEL}"
-        headers = {"Authorization": f"Bearer {settings.HUGGINGFACE_API_KEY}"}
+        api_url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://ai-resume-coach.com",  # Optional but recommended
+            "X-Title": "AI Resume Coach"  # Optional but recommended
+        }
         
         payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": settings.AI_MAX_TOKENS,
-                "temperature": settings.AI_TEMPERATURE,
-                "top_p": settings.AI_TOP_P,
-                "do_sample": True
-            }
+            "model": settings.AI_MODEL,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "max_tokens": settings.AI_MAX_TOKENS,
+            "temperature": settings.AI_TEMPERATURE,
+            "top_p": settings.AI_TOP_P
         }
         
         try:
@@ -44,9 +57,11 @@ class AIService:
             response.raise_for_status()
             result = response.json()
             
-            if isinstance(result, list) and len(result) > 0:
-                return result[0].get("generated_text", "").strip()
-            return str(result).strip()
+            # Extract message from OpenAI-compatible response
+            if "choices" in result and len(result["choices"]) > 0:
+                return result["choices"][0]["message"]["content"].strip()
+            
+            raise HTTPException(status_code=500, detail="Invalid AI response format")
         
         except requests.exceptions.Timeout:
             raise HTTPException(status_code=504, detail="AI service timeout. Please try again.")
@@ -72,7 +87,7 @@ Task: Rewrite this bullet point in a {tone} tone for a fresher's resume.
 Input: {clean_text}
 Output:"""
         
-        return AIService._call_huggingface(prompt)
+        return AIService._call_openrouter(prompt)
     
     @staticmethod
     def generate_project_description(project_name: str, tech_stack: str, key_points: str) -> str:
@@ -96,7 +111,7 @@ Tech Stack: {tech_stack}
 Key Points: {key_points}
 Output:"""
         
-        return AIService._call_huggingface(prompt)
+        return AIService._call_openrouter(prompt)
     
     @staticmethod
     def generate_resume_summary(skills: str, experience: str, goal: str) -> str:
@@ -120,7 +135,7 @@ Experience: {experience if experience else 'None'}
 Career Goal: {goal}
 Output:"""
         
-        return AIService._call_huggingface(prompt)
+        return AIService._call_openrouter(prompt)
     
     @staticmethod
     def apply_tone_variation(text: str, tone: str) -> str:
@@ -141,4 +156,4 @@ Task: Rewrite this text with a {tone} tone.
 Input: {clean_text}
 Output:"""
         
-        return AIService._call_huggingface(prompt)
+        return AIService._call_openrouter(prompt)
