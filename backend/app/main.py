@@ -52,7 +52,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 # CORS Configuration
-# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow ALL origins to fix CORS issues permanently
@@ -75,7 +74,6 @@ def health_check():
     }
 
 
-# Include routers
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(chat.router, prefix="/api/v1", tags=["AI Chat"])
