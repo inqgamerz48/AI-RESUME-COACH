@@ -393,7 +393,7 @@ Original text: {original_text}
 
 Provide ONLY the improved text, nothing else."""
                     
-                    enhanced_text = AIService._call_huggingface(prompt)
+                    enhanced_text = AIService._call_openrouter(prompt)
                     suggestion["enhanced_text"] = sanitize_input(enhanced_text, max_length=500)
                     ai_count += 1
                     
