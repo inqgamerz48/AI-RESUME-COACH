@@ -205,7 +205,7 @@ async def enhance_resume(
         enhanced_resume = Resume(
             user_id=current_user.id,
             title=f"Enhanced - {analysis.original_filename}",
-            template_id=1,  # Use default template
+            template_id=None,  # No template required for analyzer-generated resumes
             content={
                 "personal_info": {
                     "contact": enhanced_content.get("contact", "")
