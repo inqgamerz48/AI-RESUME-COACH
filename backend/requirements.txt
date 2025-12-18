@@ -14,7 +14,7 @@ slowapi==0.1.9
 reportlab==4.0.7
 Pillow==10.1.0
 # PDF Processing
-pymupdf==1.23.8
+PyMuPDF==1.23.8
 
 # Text Analysis
 nltk==3.8.1
