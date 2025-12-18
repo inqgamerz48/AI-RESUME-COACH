@@ -93,6 +93,12 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
             return;
         }
 
+        console.log("Preparing to upload:", {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
+
         setIsLoading(true);
         setError('');
         setUploadProgress(0);
@@ -119,6 +125,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
+                    // Note: Content-Type is NOT set here to allow browser to set boundary
                 },
                 body: formData,
             });
@@ -140,6 +147,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
             setFile(null);
             setUploadProgress(0);
         } catch (err) {
+            console.error("Upload error details:", err);
             setError(err.message || 'An error occurred during upload');
             setUploadProgress(0);
         } finally {

@@ -5,7 +5,7 @@ import re
 import io
 from typing import Dict, List, Optional, Tuple
 from fastapi import HTTPException, UploadFile
-import PyPDF2
+import fitz  # PyMuPDF
 from app.core.security import sanitize_input
 
 
@@ -43,6 +43,7 @@ class PDFParserService:
             )
         
         # Check file size (max 5MB)
+        # Note: reading content here moves the cursor
         content = await file.read()
         file_size = len(content)
         await file.seek(0)  # Reset file pointer
@@ -62,7 +63,7 @@ class PDFParserService:
     @staticmethod
     async def extract_text_from_pdf(file: UploadFile) -> str:
         """
-        Extract raw text from PDF file.
+        Extract raw text from PDF file using PyMuPDF (fitz).
         
         Args:
             file: Uploaded PDF file
@@ -78,19 +79,16 @@ class PDFParserService:
             content = await file.read()
             await file.seek(0)  # Reset for potential reuse
             
-            # Create PDF reader
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
-            
-            # Extract text from all pages
-            extracted_text = ""
-            for page_num in range(len(pdf_reader.pages)):
-                page = pdf_reader.pages[page_num]
-                extracted_text += page.extract_text() + "\n"
+            # Open PDF from bytes
+            with fitz.open(stream=content, filetype="pdf") as doc:
+                extracted_text = ""
+                for page in doc:
+                    extracted_text += page.get_text() + "\n"
             
             # Clean and validate
             extracted_text = extracted_text.strip()
             
-            if not extracted_text or len(extracted_text) < 100:
+            if not extracted_text or len(extracted_text) < 50:
                 raise HTTPException(
                     status_code=400,
                     detail="Could not extract sufficient text from PDF. The file may be image-based or corrupted."
@@ -98,14 +96,9 @@ class PDFParserService:
             
             return extracted_text
         
-        except PyPDF2.errors.PdfReadError as e:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Invalid or corrupted PDF file: {str(e)}"
-            )
         except Exception as e:
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=f"Error processing PDF: {str(e)}"
             )
     
