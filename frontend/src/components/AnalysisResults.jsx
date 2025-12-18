@@ -113,7 +113,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
     return (
         <div className="w-full max-w-6xl mx-auto space-y-6" ref={containerRef}>
             {/* Overall Score Card */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-white analysis-anim opacity-0">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-white analysis-anim">
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-3xl font-bold mb-2">Resume Analysis Complete!</h2>
@@ -141,7 +141,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
             </div>
 
             {/* Category Scores */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 analysis-anim opacity-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 analysis-anim">
                 {Object.entries(category_scores).map(([category, score]) => {
                     const Icon = categoryIcons[category];
                     return (
@@ -169,7 +169,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
 
             {/* Key Metrics */}
             {metrics && (
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim opacity-0">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim">
                     <h3 className="text-xl font-bold text-gray-900 mb-4">Key Metrics</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
@@ -193,7 +193,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
             )}
 
             {/* Suggestions */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim opacity-0">
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analysis-anim">
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h3 className="text-2xl font-bold text-gray-900">

@@ -166,7 +166,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
     return (
         <div className="w-full max-w-2xl mx-auto" ref={containerRef}>
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div className="mb-6 uploader-anim opacity-0">
+                <div className="mb-6 uploader-anim ">
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                         Upload Your Resume for Analysis
                     </h2>
@@ -177,7 +177,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
 
                 {/* Drag and Drop Area */}
                 <div
-                    className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 uploader-anim opacity-0 ${dragActive
+                    className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 uploader-anim  ${dragActive
                         ? 'border-indigo-500 bg-indigo-50'
                         : file
                             ? 'border-green-500 bg-green-50'
@@ -267,7 +267,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
                 )}
 
                 {/* Upload Button */}
-                <div className="uploader-anim opacity-0">
+                <div className="uploader-anim ">
                     <button
                         onClick={handleUpload}
                         disabled={!file || isLoading}
@@ -307,7 +307,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
                 </div>
 
                 {/* Info */}
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg uploader-anim opacity-0">
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg uploader-anim ">
                     <p className="text-xs text-blue-700">
                         <strong>What we analyze:</strong> Content quality, ATS optimization, structure,
                         and fresher-specific aspects to help you create a winning resume.

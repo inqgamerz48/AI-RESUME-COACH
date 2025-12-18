@@ -123,7 +123,7 @@ const ResumeAnalyzerPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-indigo-50 py-12 px-4" ref={containerRef}>
             {/* Header */}
-            <div className="max-w-6xl mx-auto mb-8 analyzer-header opacity-0">
+            <div className="max-w-6xl mx-auto mb-8 analyzer-header ">
                 <button
                     onClick={() => router.push('/dashboard')}
                     className="flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors mb-6"
@@ -147,7 +147,7 @@ const ResumeAnalyzerPage = () => {
                 </div>
 
                 {/* Progress Steps */}
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analyzer-steps opacity-0">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 analyzer-steps ">
                     <div className="flex items-center justify-between">
                         {steps.map((step, index) => (
                             <div key={step.number} className="flex items-center flex-1">
@@ -193,7 +193,7 @@ const ResumeAnalyzerPage = () => {
             {/* Main Content */}
             <div className="max-w-6xl mx-auto analyzer-content">
                 {currentStep === 1 && (
-                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
+                    <div className="animate-fadeIn analyzer-anim-item ">
                         <ResumeUploader
                             onUploadSuccess={handleUploadSuccess}
                             isLoading={isLoading}
@@ -203,7 +203,7 @@ const ResumeAnalyzerPage = () => {
                 )}
 
                 {currentStep === 2 && analysisData && (
-                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
+                    <div className="animate-fadeIn analyzer-anim-item ">
                         <AnalysisResults
                             analysisData={analysisData}
                             onProceedToEnhance={handleProceedToEnhance}
@@ -212,7 +212,7 @@ const ResumeAnalyzerPage = () => {
                 )}
 
                 {currentStep === 3 && (
-                    <div className="animate-fadeIn analyzer-anim-item opacity-0">
+                    <div className="animate-fadeIn analyzer-anim-item ">
                         <EnhancementSummary
                             enhancementData={enhancementData}
                             isGenerating={isLoading}
@@ -233,7 +233,7 @@ const ResumeAnalyzerPage = () => {
             </div>
 
             {/* Help Section */}
-            <div className="max-w-6xl mx-auto mt-12 analyzer-anim-item opacity-0">
+            <div className="max-w-6xl mx-auto mt-12 analyzer-anim-item ">
                 <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">How It Works</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
