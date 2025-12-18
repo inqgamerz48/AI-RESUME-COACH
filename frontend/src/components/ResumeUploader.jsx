@@ -107,7 +107,7 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
         formData.append('file', file);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('access_token');
 
             // Simulate progress for better UX
             const progressInterval = setInterval(() => {

@@ -31,7 +31,7 @@ const EnhancementSummary = ({ enhancementData, isGenerating }) => {
 
     const handleDownload = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('access_token');
             const response = await fetch(`http://localhost:8000${download_url}`, {
                 method: 'GET',
                 headers: {
