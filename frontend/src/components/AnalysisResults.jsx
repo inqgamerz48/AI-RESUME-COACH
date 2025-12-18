@@ -31,8 +31,6 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
         return <div className="text-center p-8">No analysis data available</div>;
     }
 
-    console.log("AnalysisResults rendering with data:", analysisData);
-
     const {
         overall_score,
         category_scores,

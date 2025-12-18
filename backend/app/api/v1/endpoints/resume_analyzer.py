@@ -148,98 +148,109 @@ async def enhance_resume(
     Returns:
         Enhanced resume ID and details
     """
-    # Get analysis record
-    analysis = db.query(ResumeAnalysis).filter(
-        ResumeAnalysis.id == analysis_id,
-        ResumeAnalysis.user_id == current_user.id,
-        ResumeAnalysis.is_active == 1
-    ).first()
-    
-    if not analysis:
-        raise HTTPException(status_code=404, detail="Analysis not found")
-    
-    if analysis.status != "completed":
-        raise HTTPException(status_code=400, detail="Analysis is not completed")
-    
-    # Validate accepted suggestions
-    suggestions = analysis.suggestions
-    if not isinstance(suggestions, list):
-        raise HTTPException(status_code=400, detail="Invalid suggestions format")
-    
-    # Mark accepted suggestions
-    enhanced_content = analysis.parsed_content.copy()
-    accepted_changes = []
-    
-    for idx in accepted_suggestions:
-        if 0 <= idx < len(suggestions):
-            suggestion = suggestions[idx]
-            suggestion["accepted"] = True
-            accepted_changes.append(suggestion)
-            
-            # Apply enhancement to content
-            section = suggestion["section"]
-            if suggestion["enhanced_text"] and section in enhanced_content:
-                # Replace original text with enhanced text
-                if suggestion["original_text"]:
-                    enhanced_content[section] = enhanced_content[section].replace(
-                        suggestion["original_text"],
-                        suggestion["enhanced_text"]
-                    )
-                else:
-                    # If no original text, append enhancement
-                    if enhanced_content[section]:
-                        enhanced_content[section] += "\n" + suggestion["enhanced_text"]
+    try:
+        # Get analysis record
+        analysis = db.query(ResumeAnalysis).filter(
+            ResumeAnalysis.id == analysis_id,
+            ResumeAnalysis.user_id == current_user.id,
+            ResumeAnalysis.is_active == 1
+        ).first()
+        
+        if not analysis:
+            raise HTTPException(status_code=404, detail="Analysis not found")
+        
+        if analysis.status != "completed":
+            raise HTTPException(status_code=400, detail="Analysis is not completed")
+        
+        # Validate accepted suggestions
+        suggestions = analysis.suggestions
+        if not isinstance(suggestions, list):
+            raise HTTPException(status_code=400, detail="Invalid suggestions format")
+        
+        # Mark accepted suggestions - safely handle parsed_content
+        enhanced_content = dict(analysis.parsed_content) if analysis.parsed_content else {}
+        accepted_changes = []
+        
+        for idx in accepted_suggestions:
+            if 0 <= idx < len(suggestions):
+                suggestion = suggestions[idx]
+                suggestion["accepted"] = True
+                accepted_changes.append(suggestion)
+                
+                # Apply enhancement to content
+                section = suggestion["section"]
+                if suggestion.get("enhanced_text") and section in enhanced_content:
+                    # Replace original text with enhanced text
+                    if suggestion.get("original_text"):
+                        enhanced_content[section] = str(enhanced_content.get(section, "")).replace(
+                            suggestion["original_text"],
+                            suggestion["enhanced_text"]
+                        )
                     else:
-                        enhanced_content[section] = suggestion["enhanced_text"]
-    
-    # Check resume creation limit
-    can_proceed, info = TierService.check_resume_limit(current_user, db)
-    if not can_proceed:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=info
+                        # If no original text, append enhancement
+                        if enhanced_content.get(section):
+                            enhanced_content[section] += "\n" + suggestion["enhanced_text"]
+                        else:
+                            enhanced_content[section] = suggestion["enhanced_text"]
+        
+        # Check resume creation limit
+        can_proceed, info = TierService.check_resume_limit(current_user, db)
+        if not can_proceed:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=info
+            )
+        
+        # Create enhanced resume
+        enhanced_resume = Resume(
+            user_id=current_user.id,
+            title=f"Enhanced - {analysis.original_filename}",
+            template_id=1,  # Use default template
+            content={
+                "personal_info": {
+                    "contact": enhanced_content.get("contact", "")
+                },
+                "summary": enhanced_content.get("summary", ""),
+                "education": enhanced_content.get("education", ""),
+                "skills": enhanced_content.get("skills", "").split(",") if enhanced_content.get("skills") else [],
+                "projects": enhanced_content.get("projects", ""),
+                "experience": enhanced_content.get("experience", ""),
+                "achievements": enhanced_content.get("achievements", "")
+            }
         )
-    
-    # Create enhanced resume
-    enhanced_resume = Resume(
-        user_id=current_user.id,
-        title=f"Enhanced - {analysis.original_filename}",
-        template_id=1,  # Use default template
-        content={
-            "personal_info": {
-                "contact": enhanced_content.get("contact", "")
-            },
-            "summary": enhanced_content.get("summary", ""),
-            "education": enhanced_content.get("education", ""),
-            "skills": enhanced_content.get("skills", "").split(",") if enhanced_content.get("skills") else [],
-            "projects": enhanced_content.get("projects", ""),
-            "experience": enhanced_content.get("experience", ""),
-            "achievements": enhanced_content.get("achievements", "")
+        
+        db.add(enhanced_resume)
+        db.commit()
+        db.refresh(enhanced_resume)
+        
+        # Update analysis record
+        analysis.enhanced_resume_id = enhanced_resume.id
+        analysis.accepted_suggestions = accepted_suggestions
+        analysis.status = "enhanced"
+        analysis.suggestions = suggestions  # Save updated suggestions with accepted flags
+        db.commit()
+        
+        # Increment resume count
+        TierService.increment_resume_count(current_user, db)
+        
+        return {
+            "enhanced_resume_id": enhanced_resume.id,
+            "analysis_id": analysis.id,
+            "accepted_changes": len(accepted_changes),
+            "total_suggestions": len(suggestions),
+            "message": "Resume enhanced successfully",
+            "download_url": f"/api/v1/resume/{enhanced_resume.id}/pdf"
         }
-    )
     
-    db.add(enhanced_resume)
-    db.commit()
-    db.refresh(enhanced_resume)
-    
-    # Update analysis record
-    analysis.enhanced_resume_id = enhanced_resume.id
-    analysis.accepted_suggestions = accepted_suggestions
-    analysis.status = "enhanced"
-    analysis.suggestions = suggestions  # Save updated suggestions with accepted flags
-    db.commit()
-    
-    # Increment resume count
-    TierService.increment_resume_count(current_user, db)
-    
-    return {
-        "enhanced_resume_id": enhanced_resume.id,
-        "analysis_id": analysis.id,
-        "accepted_changes": len(accepted_changes),
-        "total_suggestions": len(suggestions),
-        "message": "Resume enhanced successfully",
-        "download_url": f"/api/v1/resume/{enhanced_resume.id}/pdf"
-    }
+    except HTTPException:
+        raise
+    except Exception as e:
+        import logging
+        logging.error(f"Enhancement error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error enhancing resume: {str(e)}"
+        )
 
 
 @router.get("/resume/analysis-history", response_model=List[dict])
