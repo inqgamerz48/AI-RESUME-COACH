@@ -60,6 +60,7 @@ const ResumeAnalyzerPage = () => {
     }, [currentStep]);
 
     const handleUploadSuccess = (data) => {
+        console.log("handleUploadSuccess called with data:", data);
         setAnalysisData(data);
         setCurrentStep(2);
         window.scrollTo({ top: 0, behavior: 'smooth' });

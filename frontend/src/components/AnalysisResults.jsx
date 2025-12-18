@@ -25,6 +25,14 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
         }
     }, []);
 
+    // Safety check - ensure analysisData exists
+    if (!analysisData) {
+        console.error("AnalysisResults: analysisData is null/undefined");
+        return <div className="text-center p-8">No analysis data available</div>;
+    }
+
+    console.log("AnalysisResults rendering with data:", analysisData);
+
     const {
         overall_score,
         category_scores,
@@ -34,6 +42,12 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
         metrics,
         tier_info
     } = analysisData;
+
+    // Additional safety check for required fields
+    if (!category_scores || !suggestions) {
+        console.error("AnalysisResults: Missing required fields", { category_scores, suggestions });
+        return <div className="text-center p-8">Invalid analysis data</div>;
+    }
 
     // Group suggestions by category
     const groupedSuggestions = suggestions.reduce((acc, suggestion, index) => {

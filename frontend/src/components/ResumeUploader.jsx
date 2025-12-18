@@ -140,6 +140,8 @@ const ResumeUploader = ({ onUploadSuccess, isLoading, setIsLoading }) => {
 
             const data = await response.json();
 
+            console.log("Upload success! Received data:", data);
+
             // Call success callback
             onUploadSuccess(data);
 
