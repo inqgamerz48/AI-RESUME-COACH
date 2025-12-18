@@ -123,7 +123,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
                     </div>
                     <div className="text-center">
                         <div className={`text-6xl font-bold ${overall_score >= 70 ? 'text-green-300' : 'text-yellow-300'}`}>
-                            {overall_score.toFixed(0)}
+                            {Math.round(overall_score)}
                         </div>
                         <div className="text-sm text-indigo-100 mt-2">Overall Score</div>
                     </div>
@@ -149,7 +149,7 @@ const AnalysisResults = ({ analysisData, onProceedToEnhance }) => {
                             <div className="flex items-center justify-between mb-4">
                                 <Icon className="w-8 h-8 text-indigo-600" />
                                 <div className={`text-3xl font-bold ${getScoreColor(score)}`}>
-                                    {score.toFixed(0)}
+                                    {Math.round(score)}
                                 </div>
                             </div>
                             <div className="text-sm font-semibold text-gray-700">
